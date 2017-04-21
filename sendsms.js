@@ -6,17 +6,22 @@ var authToken = 'd163406b0ba3d3ff977cc4a2bba4d82f';
 var client = require('twilio')(accountSid, authToken);
 var phone = require('phone');
 var csv = require('csv-array');
+var args = require('minimist')(process.argv.slice(2));
 var contacts = [];
 var fromList = [];
+var timeInterval = args.t || 2000; // 2 seconds
 var i = 0;
-var args = require('minimist')(process.argv.slice(2));
-// console.dir(args);
+
+var message = function (name) {
+   return "This is a trial message from Rajat to "+ name +" tell me if it worked";
+}
+
 
 function sendSMS(from, to, name) {
    client.messages.create({
       to: to,
       from: from,
-      body: "This is a trial message from Rajat to "+ name +" tell me if it worked",
+      body: message(name),
    }, function(err, message) {
       console.log(message.sid);
    });
@@ -29,7 +34,7 @@ function sendSMStoContacts (i) {
       }
       i++;
   })
-  if(i < contacts.length) {setTimeout(sendSMStoContacts, 2000, i);}
+  if(i < contacts.length) {setTimeout(sendSMStoContacts, timeInterval, i);}
 };
 
 csv.parseCSV('from.csv', (data)=> {

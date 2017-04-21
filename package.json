@@ -1,0 +1,19 @@
+{
+  "name": "bulksms",
+  "version": "1.0.0",
+  "description": "Send Bulk SMS using Twillo",
+  "main": "sendsms.js",
+  "dependencies": {
+    "csv-array": "0.0.22",
+    "minimist": "^1.2.0",
+    "phone": "^1.0.9",
+    "twilio": "^2.11.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node sendsms.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -32,7 +32,7 @@ function sendSMStoContacts (i) {
   if(i < contacts.length) {setTimeout(sendSMStoContacts, 2000, i);}
 };
 
-csv.parseCSV('fromcsv', (data)=> {
+csv.parseCSV('from.csv', (data)=> {
    data.forEach((val)=> {
       fromList.push(phone(val)[0]);
    })

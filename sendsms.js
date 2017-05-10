@@ -12,45 +12,47 @@ var fromList = [];
 var timeInterval = args.t || 2000; // 2 seconds
 var i = 0;
 
-var message = function (name) {
-   return "This is a trial message from Rajat to "+ name +" tell me if it worked";
+var message = function (time, venue, cityphone) {
+   return "Reminder for Yoga For Success session at "+ venue +" is today at " + time +". For information contact Isha Foundation at "+ cityphone + ".";
 }
 
-
-function sendSMS(from, to, name) {
-   client.messages.create({
-      to: to,
-      from: from,
-      body: message(name),
-   }, function(err, message) {
-      console.log(message.sid);
-   });
+function sendSMS(from, to, st_time, venue, cityphone) {
+    console.log(to + ":" +  message(st_time, venue, cityphone));
+    client.messages.create({
+       to: to,
+       from: from,
+       body: message(st_time, venue, cityphone ),
+    }, function(err, message) {
+       console.log(message.sid);
+    });
 }
 
 function sendSMStoContacts (i) {
    fromList.forEach(function(from) {
-      if(i < contacts.length) {
-         sendSMS(from, contacts[i].phone, contacts[i].fname);
-      }
       i++;
+      if(i <= contacts.length) {
+         sendSMS(from, contacts[i-1].phone, contacts[i-1].st_time, contacts[i-1].venue, contacts[i-1].cityphone);
+      }
   })
   if(i < contacts.length) {setTimeout(sendSMStoContacts, timeInterval, i);}
 };
 
 csv.parseCSV('from.csv', (data)=> {
    data.forEach((val)=> {
-      fromList.push(phone(val)[0]);
+      fromList.push(phone(val.from)[0]);
    })
 });
 
 csv.parseCSV('contacts.csv', (data)=> {
    data.forEach((val)=>{
-      let pNo = phone(val.phone)[0];
-      console.log(pNo);
+      let pNo = phone(val.phone, val.country)[0];
       if(pNo) {
+         console.log(pNo);
          contacts.push({
-            fname: val.fname,
-            phone: pNo
+            phone: pNo,
+            st_time: val.event_start_time,
+            venue:  val.venue, 
+            cityphone: val.cityphone 
          });
       }
    })
